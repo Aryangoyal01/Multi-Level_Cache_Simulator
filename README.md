@@ -253,8 +253,6 @@ Aryan
 
 ## 💖 Built with Love
 
-Created with love ❤️
-
 ---
 
 ## ⭐ Support
