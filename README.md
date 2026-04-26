@@ -1,286 +1,272 @@
-# 🧠 Trace-Driven Multi-Level Cache Simulator with Custom Replacement Policy
+# 🧠 Multi-Level Cache Simulator (Trace-Driven with Custom Policy)
 
-## 📌 Overview
+> A full-stack cache simulator powered by **Intel PIN + Python + FastAPI + Streamlit**
+> Analyze real memory traces and compare cache replacement policies interactively.
 
-This project implements a **trace-driven, multi-level cache simulator** integrated with an **Intel PIN-based memory tracer**. It enables detailed analysis of cache behavior across **L1, L2, and L3 levels** using real execution traces.
+---
 
-The system supports multiple replacement policies:
+## ✨ Features
 
-* **FIFO (First-In-First-Out)**
-* **LRU (Least Recently Used)**
-* **Belady’s Optimal Algorithm (offline optimal)**
-* **Custom Policy (Stride-aware / Streaming-aware eviction)**
+* 🔹 3-Level Cache Simulation (L1, L2, L3)
+* 🔹 Replacement Policies:
 
-The simulator processes real memory access traces and provides **quantitative comparisons** via hit/miss statistics and visualization.
+  * FIFO
+  * LRU
+  * Belady (Optimal)
+  * Custom (Stride-aware)
+* 🔹 Real trace-driven simulation via Intel PIN
+* 🔹 CLI + Web Interface
+* 🔹 Interactive Plotly charts
+* 🔹 Upload trace or generate via C++
 
 ---
 
 ## 🏗️ Architecture
 
-```
-Target Program
-      │
-      ▼
-Intel PIN Tracer (C++)
-      │
-      ▼
-Memory Trace (R/W addresses)
-      │
-      ▼
+```bash
+C++ Program
+   ↓
+Intel PIN (Tracer)
+   ↓
+pin_tracer.out
+   ↓
 Python Cache Simulator
-      │
-      ▼
-Statistics + Visualization (PNG)
+   ↓
+FastAPI Backend
+   ↓
+Streamlit Frontend
 ```
-
----
-
-## 🔧 Components
-
-### 1. Intel PIN Tracer (`pin_tracer.cpp`)
-
-* Instruments every memory read/write
-* Outputs trace in format:
-
-```
-R 0xADDRESS
-W 0xADDRESS
-...
-#eof
-```
-
-* Uses dynamic binary instrumentation to capture **real execution behavior**
-
----
-
-### 2. Workload Generator (`test_program.cpp`)
-
-* Designed to stress cache policies:
-
-  * **Sequential pattern access** → promotes reuse
-  * **Random noise access** → causes cache thrashing
-
-👉 This creates a controlled environment where different policies behave differently.
-
----
-
-### 3. Cache Simulator (`cache_sim.py`, `main.py`)
-
-#### Features:
-
-* Multi-level cache (L1, L2, L3)
-* Inclusive hierarchy
-* Configurable:
-
-  * Cache sizes
-  * Associativity
-  * Block size
-* Warmup phase support
-* Real trace-driven simulation
-
----
-
-## 🧠 Replacement Policies
-
-### FIFO
-
-Evicts the oldest inserted block.
-
-### LRU
-
-Evicts the least recently used block.
-
-### Belady (Optimal)
-
-Uses future knowledge to evict the block with the farthest next use.
-
-### 🔥 Custom Policy (Stride-aware)
-
-The custom policy detects **streaming/stride access patterns**:
-
-* Tracks last 3 accesses
-* If constant stride detected → marks block as *streaming*
-* Evicts streaming blocks first (low reuse probability)
-* Falls back to LRU otherwise
-
-👉 This approximates **reuse distance** and improves performance under mixed workloads.
 
 ---
 
 ## ⚙️ Requirements
 
-### System
+### 🖥️ System
 
-* Linux (recommended)
-* Intel PIN Tool
+* Linux / WSL (required)
+* Intel PIN
+* g++, make
 
-### Python
+### 🐍 Python
 
 * Python 3.8+
 
-### Libraries
-
-```bash
-pip install matplotlib numpy
-```
-
-#### Why these are needed:
-
-* **matplotlib** → generates comparison plots (`policy_comparison.png`)
-* **numpy** → efficient numerical operations for plotting
-
 ---
 
-## 🚀 Setup & Execution
-
-### Step 1: Build PIN Tool
-
-Inside Intel PIN tools directory:
+## 📦 Install Dependencies
 
 ```bash
-make TARGET=intel64 obj-intel64/pin_tracer.so
+sudo apt update
+sudo apt install -y python3 python3-pip g++ make
+```
+
+```bash
+pip install -r requirements.txt --break-system-packages
 ```
 
 ---
 
-### Step 2: Compile Test Program
+## 🔧 Setup Intel PIN
 
 ```bash
-g++ -O2 test_program.cpp -o test_program
+tar -xvf pin-*.tar.gz
+export PIN_ROOT=/path/to/pin
+export PATH=$PIN_ROOT:$PATH
+```
+
+(Optional)
+
+```bash
+echo 'export PIN_ROOT=/path/to/pin' >> ~/.bashrc
+echo 'export PATH=$PIN_ROOT:$PATH' >> ~/.bashrc
 ```
 
 ---
 
-### Step 3: Generate Memory Trace
+## 🛠️ Build PIN Tool
 
 ```bash
-pin -t obj-intel64/pin_tracer.so -o pin_tracer.out -- ./test_program
+cd pin
+make clean
+make
 ```
 
-This produces:
+Verify:
 
+```bash
+ls obj-intel64/pin_tracer.so
 ```
+
+---
+
+## 🧪 Generate Trace
+
+```bash
+cd pin
+g++ test_program.cpp -o a.out
+```
+
+```bash
+$PIN_ROOT/pin -t obj-intel64/pin_tracer.so -- ./a.out
+```
+
+📄 Output:
+
+```bash
 pin_tracer.out
 ```
 
 ---
 
-### Step 4: Run Cache Simulator
+## 🧪 Run CLI Simulator
 
 ```bash
-python3 main.py
+cd ..
+python main.py
 ```
 
-You will be prompted for:
+Use:
 
-* Block size
-* Cache sizes (L1, L2, L3)
-* Associativity
-* Warmup accesses
-* Trace file path
-
-(Default values are provided for convenience)
-
----
-
-## 📊 Output
-
-### Terminal Output
-
-Displays per-policy statistics:
-
-```
-L1 - Hit Rate: XX%
-L2 - Hit Rate: XX%
-L3 - Hit Rate: XX%
+```bash
+pin_tracer.out
 ```
 
 ---
 
-### Visualization
+## 🌐 Run Web App
 
-A comparison plot is generated:
+### Backend
 
+```bash
+python -m uvicorn web.backend.server:app --reload
 ```
-policy_comparison.png
+
+### Frontend (new terminal)
+
+```bash
+python -m streamlit run web/frontend/app.py
 ```
-
-This shows:
-
-* L1 / L2 / L3 hit rates
-* Across all policies
 
 ---
 
-## 🧪 Trace Format
+## 🌍 Open in Browser
 
-Each line represents a memory access:
-
+```bash
+http://localhost:8501
 ```
-R 0x7fffc6606f58   # Read
-W 0x7fffc6606f60   # Write
-```
-
-* Supports both hexadecimal and decimal addresses
-* Parser automatically extracts valid addresses
 
 ---
 
-## ⚠️ Important Notes
+## 🧪 Usage
 
-* Cache parameters must be **powers of two**
-* Cache size must satisfy:
+### 🔹 Upload Mode
 
-  ```
-  size ≥ block_size × associativity
-  ```
-* Warmup phase avoids skewed statistics
-* Large trace files may require significant memory
+* Upload `pin_tracer.out`
+* Configure cache
+* Run simulation
+
+### 🔹 Code Mode
+
+* Write C++ code
+* Click run
+* Full pipeline executes automatically
+
+---
+
+## 📊 Recommended Config
+
+```bash
+Block Size: 64
+L1: 32768 (8-way)
+L2: 262144 (8-way)
+L3: 2097152 (16-way)
+Warmup: 50000
+```
+
+---
+
+## 📈 Expected Results
+
+```bash
+L1 ≈ 99%
+L2 ≈ 60–65%
+L3 ≈ ~20%
+```
+
+---
+
+## 🧠 Replacement Policies
+
+| Policy | Description                  |
+| ------ | ---------------------------- |
+| FIFO   | Oldest block eviction        |
+| LRU    | Least recently used          |
+| Belady | Optimal (future-aware)       |
+| Custom | Stride/stream-aware eviction |
 
 ---
 
 ## 📁 Project Structure
 
-```
-.
-├── cache_sim.py
+```bash
+ca/
 ├── main.py
-├── pin_tracer.cpp
-├── test_program.cpp
-├── Makefile
+├── requirements.txt
 ├── README.md
+│
+├── pin/
+│   ├── pin_tracer.cpp
+│   ├── test_program.cpp
+│   └── Makefile
+│
+├── web/
+│   ├── backend/server.py
+│   ├── frontend/app.py
+│   └── simulator/cache_sim.py
 ```
 
 ---
 
-## 🔬 Key Concepts Demonstrated
+## ⚠️ Notes
 
-* Trace-driven simulation
-* Multi-level cache hierarchy
-* Inclusion property
-* Replacement policy design
-* Belady optimal algorithm
-* Stride-based access pattern detection
+* Always run from project root
+* Use `pin_tracer.out` consistently
+* Large traces (>200MB) may fail upload
+* PIN required → Linux only
 
 ---
 
-## 🚀 Future Improvements
+## 🚀 Future Work
 
-* Add write policies (write-back / write-through)
-* Support non-inclusive caches
-* Parallel simulation for large traces
-* Advanced ML-based replacement policy
+* Write-back / write-through policies
+* Non-inclusive caches
+* ML-based replacement
+* Docker support
 
 ---
 
 ## 👨‍💻 Author
 
-Developed as a systems-level project exploring **cache behavior, replacement policies, and performance optimization**.
+Aryan
+
+---
+
+## 💖 Built with Love
+
+Created with love ❤️
+
+---
+
+## ⭐ Support
+
+If this helped you:
+
+👉 Give it a star ⭐
+👉 Share it
+👉 Fork it
 
 ---
 
 ## 📌 Summary
 
-This project provides a **realistic and extensible framework** for analyzing cache performance using actual execution traces, bridging the gap between theoretical policies and practical behavior.
-
----
+A realistic, extensible system that bridges **cache theory + real-world execution** using trace-driven simulation.

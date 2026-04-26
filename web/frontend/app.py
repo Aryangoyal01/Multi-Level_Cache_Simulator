@@ -391,7 +391,7 @@ def chart_hit_rates(results: dict):
             y=rates,
             marker_color=LEVEL_COLORS[level],
             marker_line_width=0,
-            text=[f"{r:.1f}%" for r in rates],
+            text=[f"{r:.2f}%" for r in rates],
             textposition="outside",
             textfont=dict(size=9, family="JetBrains Mono"),
         ))
@@ -415,7 +415,7 @@ def chart_miss_rates(results: dict):
             y=rates,
             marker_color=LEVEL_COLORS[level],
             marker_line_width=0,
-            text=[f"{r:.1f}%" for r in rates],
+            text=[f"{r:.2f}%" for r in rates],
             textposition="outside",
             textfont=dict(size=9, family="JetBrains Mono"),
         ))
@@ -583,7 +583,7 @@ def render_results(data: dict):
 # ---------------------------------------------------------------------------
 def main():
     # Header
-    st.markdown("# 🧠 CacheLens")
+    st.markdown("# 🧠 CacheLens — Multi-Level Cache Simulator")
     st.markdown(
         '<div style="color:#4b5563;font-size:0.82rem;margin-top:-0.5rem;margin-bottom:1.5rem">'
         'Trace-Driven Multi-Level Cache Policy Simulator · FIFO · LRU · Belady · Stride-Aware Custom'
@@ -591,8 +591,9 @@ def main():
         unsafe_allow_html=True,
     )
 
-    cfg, config_valid = render_sidebar()
 
+    cfg, config_valid = render_sidebar()
+    
     # ── Input tabs ──────────────────────────────────────────────────────────
     tab_code, tab_trace = st.tabs(["✏️  Write / Paste C++ Code", "📂  Upload Trace File"])
 

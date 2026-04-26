@@ -23,7 +23,7 @@ static uint64_t TraceWorkload() {
 
     // Loop enough times to easily clear your 50,000 line cache warmup
     // This will generate roughly 300,000 to 500,000 memory accesses depending on compiler optimizations
-    for (int i = 0; i < 15000; ++i) {
+    for (int i = 0; i < 3000; ++i) {
         
         // PHASE A: The Predictable Stride (SRD thrives here)
         // We sequentially read through the pattern array. 

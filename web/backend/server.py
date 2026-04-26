@@ -15,7 +15,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, validator
 from typing import Optional
 
-from cache_sim import run_simulation, parse_trace
+from web.simulator.cache_sim import run_simulation, parse_trace
 
 # ---------------------------------------------------------------------------
 # Logging

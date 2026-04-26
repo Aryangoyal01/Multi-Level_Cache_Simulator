@@ -190,26 +190,26 @@ def run_simulation(trace: list[int], config: dict) -> dict:
         sim.process_trace(trace)
 
         results[policy] = {
-            "L1": {
+"L1": {
     "accesses": sim.l1.accesses,
     "hits": sim.l1.hits,
     "misses": sim.l1.misses,
-    "hit_rate": (sim.l1.hits / sim.l1.accesses * 100) if sim.l1.accesses else 0,
-    "miss_rate":(sim.l1.misses / sim.l1.accesses * 100)if sim.l1.accesses else 0,
+    "hit_rate": round((sim.l1.hits / sim.l1.accesses) * 100, 2) if sim.l1.accesses else 0,
+    "miss_rate": round((sim.l1.misses / sim.l1.accesses) * 100, 2) if sim.l1.accesses else 0,
 },
 "L2": {
     "accesses": sim.l2.accesses,
     "hits": sim.l2.hits,
     "misses": sim.l2.misses,
-    "hit_rate": (sim.l2.hits / sim.l2.accesses * 100) if sim.l2.accesses else 0,
-    "miss_rate":(sim.l2.misses / sim.l2.accesses * 100) if sim.l2.accesses else 0,
+    "hit_rate": round((sim.l2.hits / sim.l2.accesses) * 100, 2) if sim.l2.accesses else 0,
+    "miss_rate": round((sim.l2.misses / sim.l2.accesses) * 100, 2) if sim.l2.accesses else 0,
 },
 "L3": {
     "accesses": sim.l3.accesses,
     "hits": sim.l3.hits,
     "misses": sim.l3.misses,
-    "hit_rate": (sim.l3.hits / sim.l3.accesses * 100) if sim.l3.accesses else 0,
-    "miss_rate":(sim.l3.misses / sim.l3.accesses * 100) if sim.l3.accesses else 0,
+    "hit_rate": round((sim.l3.hits / sim.l3.accesses) * 100, 2) if sim.l3.accesses else 0,
+    "miss_rate": round((sim.l3.misses / sim.l3.accesses) * 100, 2) if sim.l3.accesses else 0,
 },
         }
 

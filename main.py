@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import os
-from cache_sim import MultiLevelCacheSimulator
+from web.simulator.cache_sim import MultiLevelCacheSimulator
 
 def load_trace(filepath):
     """Reads addresses from a file, handling prefixes like 'R' or 'W' from PIN traces."""
