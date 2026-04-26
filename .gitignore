@@ -4,3 +4,4 @@
 *.exe
 *.so
 obj-intel64/
+__pycache__/
