@@ -248,6 +248,7 @@ ca/
 ## 👨‍💻 Author
 
 Aryan
+Manan
 
 ---
 
