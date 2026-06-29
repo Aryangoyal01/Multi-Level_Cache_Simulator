@@ -41,7 +41,7 @@ Streamlit Frontend
 
 ## Requirements
 
-### 🖥️ System
+### System
 
 * Linux / WSL (required)
 * Intel PIN
