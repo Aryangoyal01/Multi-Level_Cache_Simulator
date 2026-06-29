@@ -1,11 +1,11 @@
-# 🧠 Multi-Level Cache Simulator (Trace-Driven with Custom Policy)
+# Multi-Level Cache Simulator (Trace-Driven with Custom Policy)
 
 > A full-stack cache simulator powered by **Intel PIN + Python + FastAPI + Streamlit**
 > Analyze real memory traces and compare cache replacement policies interactively.
 
 ---
 
-## ✨ Features
+## Features
 
 * 🔹 3-Level Cache Simulation (L1, L2, L3)
 * 🔹 Replacement Policies:
@@ -21,7 +21,7 @@
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```bash
 C++ Program
@@ -39,7 +39,7 @@ Streamlit Frontend
 
 ---
 
-## ⚙️ Requirements
+## Requirements
 
 ### 🖥️ System
 
@@ -47,13 +47,13 @@ Streamlit Frontend
 * Intel PIN
 * g++, make
 
-### 🐍 Python
+### Python
 
 * Python 3.8+
 
 ---
 
-## 📦 Install Dependencies
+## Install Dependencies
 
 ```bash
 sudo apt update
@@ -66,7 +66,7 @@ pip install -r requirements.txt --break-system-packages
 
 ---
 
-## 🔧 Setup Intel PIN
+## Setup Intel PIN
 
 ```bash
 tar -xvf pin-*.tar.gz
@@ -83,7 +83,7 @@ echo 'export PATH=$PIN_ROOT:$PATH' >> ~/.bashrc
 
 ---
 
-## 🛠️ Build PIN Tool
+## Build PIN Tool
 
 ```bash
 cd pin
@@ -99,7 +99,7 @@ ls obj-intel64/pin_tracer.so
 
 ---
 
-## 🧪 Generate Trace
+## Generate Trace
 
 ```bash
 cd pin
@@ -110,7 +110,7 @@ g++ test_program.cpp -o a.out
 $PIN_ROOT/pin -t obj-intel64/pin_tracer.so -- ./a.out
 ```
 
-📄 Output:
+Output:
 
 ```bash
 pin_tracer.out
@@ -118,7 +118,7 @@ pin_tracer.out
 
 ---
 
-## 🧪 Run CLI Simulator
+## Run CLI Simulator
 
 ```bash
 cd ..
@@ -133,7 +133,7 @@ pin_tracer.out
 
 ---
 
-## 🌐 Run Web App
+## Run Web App
 
 ### Backend
 
@@ -149,7 +149,7 @@ python -m streamlit run web/frontend/app.py
 
 ---
 
-## 🌍 Open in Browser
+## Open in Browser
 
 ```bash
 http://localhost:8501
@@ -157,7 +157,7 @@ http://localhost:8501
 
 ---
 
-## 🧪 Usage
+## Usage
 
 ### 🔹 Upload Mode
 
@@ -173,7 +173,7 @@ http://localhost:8501
 
 ---
 
-## 📊 Recommended Config
+## Recommended Config
 
 ```bash
 Block Size: 64
@@ -185,7 +185,7 @@ Warmup: 50000
 
 ---
 
-## 📈 Expected Results
+## Expected Results
 
 ```bash
 L1 ≈ 99%
@@ -195,7 +195,7 @@ L3 ≈ ~20%
 
 ---
 
-## 🧠 Replacement Policies
+## Replacement Policies
 
 | Policy | Description                  |
 | ------ | ---------------------------- |
@@ -206,7 +206,7 @@ L3 ≈ ~20%
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```bash
 ca/
@@ -227,7 +227,7 @@ ca/
 
 ---
 
-## ⚠️ Notes
+## Notes
 
 * Always run from project root
 * Use `pin_tracer.out` consistently
@@ -236,7 +236,7 @@ ca/
 
 ---
 
-## 🚀 Future Work
+## Future Work
 
 * Write-back / write-through policies
 * Non-inclusive caches
@@ -245,16 +245,16 @@ ca/
 
 ---
 
-## 👨‍💻 Author
+## Author
 
 Aryan
 
 ---
 
-## 💖 Built with Love
+## Built with Love
 ---
 
-## ⭐ Support
+## Support
 
 If this helped you:
 
@@ -264,6 +264,6 @@ If this helped you:
 
 ---
 
-## 📌 Summary
+## Summary
 
 A realistic, extensible system that bridges **cache theory + real-world execution** using trace-driven simulation.
